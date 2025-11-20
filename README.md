@@ -24,4 +24,23 @@ print("Model exported to mask_yolov5.torchscript.pt")
 ##### exportando a Onnx
 !python export.py --weights /content/yolov5/mask_yolov5.pt --include onnx
 
+####probar el modelo en colab
+import torch
+from pathlib import Path
+from PIL import Image
 
+# Cargar modelo custom
+model = torch.hub.load('/content/yolov5', 'custom', path='/content/yolov5/mask_yolov5.pt', source='local')
+
+# Imagen
+img_path = '/content/yolov5/sinmask.jpg'
+
+# Detectar
+results = model(img_path)
+
+# Mostrar imagen con cajas
+results.show()
+
+# Obtener coordenadas, clases y probabilidades
+for *box, conf, cls in results.xyxy[0].tolist():
+    print(f"Coordenadas: {box}, Probabilidad: {conf}, Clase: {cls}")
